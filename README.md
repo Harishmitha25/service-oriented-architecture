@@ -42,7 +42,7 @@ Preconditions:
 	transportMeans must be one of “car”, “bicycle”, “e-bike”, or “motorbike”.
 Postconditions: 
 Returns RouteDetails including estimated time (other details optional).
-![DataModel](task-images/data-model.png)
+![DataModel](task-image/data-model.png)
 
 Design a data representation in XML and/or JSON to support the operations 1 and 2 above. You can either consider them separately, designing two independent solutions for 1 and 2, or propose a common solution to both. 
 
