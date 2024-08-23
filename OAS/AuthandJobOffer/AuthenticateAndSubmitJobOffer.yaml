@@ -1,0 +1,140 @@
+openapi: 3.0.0
+info:
+  title: IDUAppDUService API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+paths:
+  /authenticateAndRequestSimilarOffers:
+    post:
+      summary: Authenticate user and request similar job offers.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+                - jobOffers
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                jobOffers:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/JobOfferRequest'
+      responses:
+        '200':
+          description: Successfully authenticated and returned similar offers.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User is authenticated successfully."
+                  jobOffers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/JobOfferResponse'
+        '401':
+          description: Authentication failed.
+        '400':
+          description: Bad request (e.g., invalid request body).
+        '405':
+          description: Method not allowed.
+
+  /submitSelectedJob:
+    post:
+      summary: Submit a selected job offer.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - offerId
+              properties:
+                offerId:
+                  type: string
+      responses:
+        '200':
+          description: Job offer successfully submitted with route details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteDetailsResponse'
+        '400':
+          description: Bad request (e.g., invalid input data).
+        '404':
+          description: OfferId does not correspond to a valid job offer.
+        '405':
+          description: Method not allowed.
+
+components:
+  schemas:
+    JobOfferRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+
+    JobOfferResponse:
+      type: object
+      properties:
+        jobId:
+          type: string
+        startLocation:
+          type: string
+        endLocation:
+          type: string
+        distance:
+          type: string
+        deliveryPartner:
+          type: string
+
+    RouteDetailsResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "Valid JobOffer ID"
+        transportMeans:
+          type: string
+          example: "bicycling"
+        estimatedDistance:
+          type: string
+          example: "1.50 miles"
+        estimatedTime:
+          type: string
+          example: "8 minutes"
+        startLocation:
+          type: string
+          example: "5 Shires Ln, Leicester LE1 4AN, UK"
+        targetLocation:
+          type: string
+          example: "University Rd, Leicester LE1 7RH, UK"
+        RouteInstructionSteps:
+          type: array
+          items:
+            $ref: '#/components/schemas/RouteInstructionStep'
+
+    RouteInstructionStep:
+      type: object
+      properties:
+        estimatedDistance:
+          type: string
+        estimatedTime:
+          type: string
+        instruction:
+          type: string

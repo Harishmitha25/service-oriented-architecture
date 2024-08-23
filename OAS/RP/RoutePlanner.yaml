@@ -1,0 +1,94 @@
+openapi: 3.0.0
+info:
+  title: IDU Service Route Planner API
+  description: This API provides route planning functionalities.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8001
+
+paths:
+  /routePlanner:
+    get:
+      summary: Get route details
+      description: Retrieve route details including distance, time, and step-by-step instructions.
+      parameters:
+        - in: query
+          name: startLocation
+          required: true
+          schema:
+            type: string
+          description: The starting location of the route.
+        - in: query
+          name: targetLocation
+          required: true
+          schema:
+            type: string
+          description: The destination location of the route.
+        - in: query
+          name: transportMeans
+          required: true
+          schema:
+            type: string
+          description: The means of transport (e.g., car, bicycle, e-bike, motorbike).
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteDetails'
+        '400':
+          description: Bad Request - Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    RouteDetails:
+      type: object
+      properties:
+        transportMeans:
+          type: string
+          example: driving
+        estimatedDistance:
+          type: string
+          example: "1.34 miles"
+        estimatedTime:
+          type: string
+          example: "8 minutes"
+        startLocation:
+          type: string
+          example: "University Rd, Leicester LE1 7RH, UK"
+        targetLocation:
+          type: string
+          example: "Leicester Railway Station, London Rd, Leicester LE2 0QB, UK"
+        RouteInstructionSteps:
+          type: array
+          items:
+            $ref: '#/components/schemas/RouteInstructionStep'
+    RouteInstructionStep:
+      type: object
+      properties:
+        estimatedDistance:
+          type: string
+          example: "45 m"
+        estimatedTime:
+          type: string
+          example: "1 min"
+        instruction:
+          type: string
+          example: "Head <b>southeast</b>"
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "One or more Addresses are invalid or input parameters are empty."
